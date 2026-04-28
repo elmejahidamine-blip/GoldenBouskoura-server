@@ -1,0 +1,190 @@
+{
+  "orders": [
+    {
+      "_id": "order-1777403517697",
+      "user": {
+        "_id": "user_3CzuUhTxSyerOWw4nEyD2Ub7tkW",
+        "name": "photo.nov2023",
+        "email": "photo.nov2023@gmail.com",
+        "role": "user",
+        "createdAt": "2026-04-28T19:11:57.697Z"
+      },
+      "orderNumber": "ORD-1777403517698",
+      "items": [
+        {
+          "product": {
+            "ratings": {
+              "average": 0,
+              "count": 0
+            },
+            "_id": "6683d9d07f779795ecfa98f3",
+            "name": "Boy Round Neck Pure Cotton T-shirt",
+            "description": "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
+            "price": 25,
+            "images": [
+              "https://raw.githubusercontent.com/avinashdm/gs-images/main/forever/p_img18.png"
+            ],
+            "sizes": [
+              "S",
+              "M",
+              "L",
+              "XL",
+              "XXL"
+            ],
+            "category": "Kids",
+            "stock": 100,
+            "isFeatured": false,
+            "isActive": true,
+            "createdAt": "2026-02-08T04:21:50.829Z"
+          },
+          "name": "Boy Round Neck Pure Cotton T-shirt",
+          "quantity": 1,
+          "price": 25,
+          "image": "https://raw.githubusercontent.com/avinashdm/gs-images/main/forever/p_img18.png",
+          "size": "M"
+        }
+      ],
+      "shippingAddress": {
+        "street": "124 Main Street , Volley Market",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "100001",
+        "country": "USA"
+      },
+      "paymentMethod": "cash",
+      "paymentStatus": "pending",
+      "orderStatus": "cancelled",
+      "subtotal": 25,
+      "shippingCost": 2,
+      "tax": 0,
+      "totalAmount": 27,
+      "createdAt": "2026-04-28T19:11:57.698Z"
+    },
+    {
+      "_id": "order-1777403212306",
+      "user": {
+        "_id": "user_3CzuUhTxSyerOWw4nEyD2Ub7tkW",
+        "name": "photo.nov2023",
+        "email": "photo.nov2023@gmail.com",
+        "role": "user",
+        "createdAt": "2026-04-28T19:06:52.306Z"
+      },
+      "orderNumber": "ORD-1777403212306",
+      "items": [
+        {
+          "product": {
+            "ratings": {
+              "average": 4.9,
+              "count": 30
+            },
+            "_id": "698442cfda74ab16485b6062",
+            "name": "Leather Bag",
+            "description": "Premium leather bag with ample storage.",
+            "price": 129.99,
+            "images": [
+              "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=1000&auto=format&fit=crop"
+            ],
+            "sizes": [
+              "One Size"
+            ],
+            "category": "Bags",
+            "stock": 9,
+            "isFeatured": false,
+            "isActive": true,
+            "createdAt": "2026-02-05T07:12:15.825Z"
+          },
+          "name": "Leather Bag",
+          "quantity": 1,
+          "price": 129.99,
+          "image": "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=1000&auto=format&fit=crop",
+          "size": "One Size"
+        }
+      ],
+      "shippingAddress": {
+        "street": "124 Main Street , Volley Market",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "100001",
+        "country": "USA"
+      },
+      "paymentMethod": "cash",
+      "paymentStatus": "pending",
+      "orderStatus": "cancelled",
+      "subtotal": 129.99,
+      "shippingCost": 2,
+      "tax": 0,
+      "totalAmount": 131.99,
+      "createdAt": "2026-04-28T19:06:52.306Z"
+    }
+  ],
+  "notifications": [
+    {
+      "type": "order_status_updated",
+      "title": "Mise a jour commande",
+      "message": "Mise a jour commande: photo.nov2023, commande ORD-1777403517698, statut cancelled.",
+      "phone": "+212627366000",
+      "relatedOrderId": "order-1777403517697",
+      "_id": "notification-1777406868394-j8h353",
+      "createdAt": "2026-04-28T20:07:48.394Z",
+      "isRead": true
+    },
+    {
+      "type": "order_confirmed",
+      "title": "Operation confirmee",
+      "message": "Operation confirmee: photo.nov2023 a confirme la commande ORD-1777403517698. Total $27.00.",
+      "phone": "+212627366000",
+      "relatedOrderId": "order-1777403517697",
+      "_id": "notification-1777403517733-izhmmg",
+      "createdAt": "2026-04-28T19:11:57.733Z",
+      "isRead": true
+    },
+    {
+      "type": "checkout_started",
+      "title": "Traitement en cours",
+      "message": "Traitement en cours: photo.nov2023 a commence une commande. 1 article(s), total $27.00.",
+      "phone": "+212627366000",
+      "_id": "notification-1777403514769-nitgwz",
+      "createdAt": "2026-04-28T19:11:54.769Z",
+      "isRead": true
+    },
+    {
+      "type": "order_status_updated",
+      "title": "Mise a jour commande",
+      "message": "Mise a jour commande: photo.nov2023, commande ORD-1777403212306, statut cancelled.",
+      "phone": "+212627366000",
+      "relatedOrderId": "order-1777403212306",
+      "_id": "notification-1777403473698-m0x4if",
+      "createdAt": "2026-04-28T19:11:13.698Z",
+      "isRead": true
+    },
+    {
+      "type": "order_status_updated",
+      "title": "Mise a jour commande",
+      "message": "Mise a jour commande: photo.nov2023, commande ORD-1777403212306, statut cancelled.",
+      "phone": "+212627366000",
+      "relatedOrderId": "order-1777403212306",
+      "_id": "notification-1777403465942-9z9p3m",
+      "createdAt": "2026-04-28T19:11:05.942Z",
+      "isRead": true
+    },
+    {
+      "type": "order_confirmed",
+      "title": "Operation confirmee",
+      "message": "Operation confirmee: photo.nov2023 a confirme la commande ORD-1777403212306. Total $131.99.",
+      "phone": "+212627366000",
+      "relatedOrderId": "order-1777403212306",
+      "_id": "notification-1777403212344-qquu07",
+      "createdAt": "2026-04-28T19:06:52.344Z",
+      "isRead": true
+    },
+    {
+      "type": "checkout_started",
+      "title": "Traitement en cours",
+      "message": "Traitement en cours: photo.nov2023 a commence une commande. 1 article(s), total $131.99.",
+      "phone": "+212627366000",
+      "_id": "notification-1777403199501-9fk0oi",
+      "createdAt": "2026-04-28T19:06:39.501Z",
+      "isRead": true
+    }
+  ]
+}
