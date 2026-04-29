@@ -1,5 +1,6 @@
 import { verifyWebhook } from "@clerk/express/webhooks";
 import type { Request, Response } from "express";
+import connectToDatabase from "../config/db";
 import User from "../models/User";
 
 type ClerkEmailAddress = {
@@ -15,6 +16,13 @@ type ClerkUserData = {
   last_name?: string | null;
   image_url?: string | null;
 };
+
+let mongoConnection: Promise<void> | null = null;
+
+function ensureDatabaseConnection(): Promise<void> {
+  mongoConnection ??= connectToDatabase();
+  return mongoConnection;
+}
 
 function getPrimaryEmail(data: ClerkUserData): string {
   const email =
@@ -34,6 +42,8 @@ export async function clerkWebhook(req: Request, res: Response) {
     const evt = await verifyWebhook(req);
 
     if (evt.type === "user.created" || evt.type === "user.updated") {
+      await ensureDatabaseConnection();
+
       const data = evt.data as ClerkUserData;
       const userData = {
         clerkId: data.id,
@@ -52,6 +62,8 @@ export async function clerkWebhook(req: Request, res: Response) {
     }
 
     if (evt.type === "user.deleted") {
+      await ensureDatabaseConnection();
+
       const data = evt.data as { id?: string };
 
       if (data.id) {
