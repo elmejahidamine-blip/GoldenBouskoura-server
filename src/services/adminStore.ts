@@ -97,17 +97,14 @@ export async function addOrder(order: StoredOrder) {
 
 export async function updateOrderStatus(orderId: string, status: StoredOrder["orderStatus"]) {
   const store = await readStore();
-  let updatedOrder: StoredOrder | null = null;
+  const orderIndex = store.orders.findIndex((order) => order._id === orderId);
 
-  store.orders = store.orders.map((order) => {
-    if (order._id !== orderId) {
-      return order;
-    }
+  if (orderIndex === -1) {
+    return null;
+  }
 
-    updatedOrder = { ...order, orderStatus: status };
-    return updatedOrder;
-  });
-
+  const updatedOrder: StoredOrder = { ...store.orders[orderIndex], orderStatus: status };
+  store.orders[orderIndex] = updatedOrder;
   await writeStore(store);
   return updatedOrder;
 }

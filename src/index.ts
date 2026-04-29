@@ -7,15 +7,17 @@ const allowStartupWithoutMongo =
   process.env.ALLOW_START_WITHOUT_MONGODB === "true" ||
   process.env.ALLOW_START_WITHOUT_MONGODB === "1";
 
-function logStartupError(error: unknown): void {
+function logMongoConnectionError(error: unknown, level: "error" | "warn" = "error"): void {
+  const logger = level === "warn" ? console.warn : console.error;
+
   if (!(error instanceof Error)) {
-    console.error("Failed to start server", error);
+    logger("MongoDB connection failed", error);
     return;
   }
 
-  console.error("Failed to start server");
-  console.error(`Name: ${error.name}`);
-  console.error(`Message: ${error.message}`);
+  logger("MongoDB connection failed");
+  logger(`Name: ${error.name}`);
+  logger(`Message: ${error.message}`);
 
   const detailedError = error as Error & {
     cause?: {
@@ -28,7 +30,7 @@ function logStartupError(error: unknown): void {
   if (servers instanceof Map && servers.size > 0) {
     for (const [address, description] of servers.entries()) {
       if (description.error) {
-        console.error(`Server ${address}: ${description.error.message}`);
+        logger(`Server ${address}: ${description.error.message}`);
       }
     }
   }
@@ -39,12 +41,12 @@ async function startServer(): Promise<void> {
     await connectToDatabase();
     console.log("MongoDB connected");
   } catch (error) {
-    logStartupError(error);
-
     if (!allowStartupWithoutMongo) {
+      logMongoConnectionError(error);
       process.exit(1);
     }
 
+    logMongoConnectionError(error, "warn");
     console.warn("Continuing without MongoDB because ALLOW_START_WITHOUT_MONGODB is enabled.");
   }
 
