@@ -11,6 +11,9 @@ function ensureDatabaseConnection(): Promise<void> {
 }
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  await ensureDatabaseConnection();
+  if (req.url !== "/" && req.url !== "/health") {
+    await ensureDatabaseConnection();
+  }
+
   return app(req, res);
 }
