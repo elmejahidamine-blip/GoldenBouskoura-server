@@ -1,87 +1,38 @@
-import { verifyWebhook } from "@clerk/express/webhooks";
-import type { Request, Response } from "express";
-import connectToDatabase from "../config/db";
-import User from "../models/User";
+// src/controllers/clerkWebhook.ts
+import { Request, Response } from 'express';
+import User from '../models/User';
 
-type ClerkEmailAddress = {
-  id?: string;
-  email_address?: string;
-};
-
-type ClerkUserData = {
-  id: string;
-  email_addresses?: ClerkEmailAddress[];
-  primary_email_address_id?: string;
-  first_name?: string | null;
-  last_name?: string | null;
-  image_url?: string | null;
-};
-
-let mongoConnection: Promise<void> | null = null;
-
-function ensureDatabaseConnection(): Promise<void> {
-  mongoConnection ??= connectToDatabase();
-  return mongoConnection;
-}
-
-function getPrimaryEmail(data: ClerkUserData): string {
-  const email =
-    data.email_addresses?.find(
-      (address) => address.id === data.primary_email_address_id
-    )?.email_address ||
-    data.email_addresses?.[0]?.email_address ||
-    "";
-  return email.trim().toLowerCase();
-}
-
-function getDisplayName(data: ClerkUserData): string {
-  return [data.first_name, data.last_name].filter(Boolean).join(" ").trim();
-}
-
-export async function clerkWebhook(req: Request, res: Response) {
+export const clerkWebhook = async (req: Request, res: Response) => {
   try {
-    const evt = await verifyWebhook(req);
+    const evt: any = req.body;
+    const eventType = evt.type;
 
-    if (evt.type === "user.created" || evt.type === "user.updated") {
-      await ensureDatabaseConnection();
+    console.log('📩 Webhook received:', eventType);
 
-      const data = evt.data as ClerkUserData;
-      const userData = {
-        clerkId: data.id,
-        email: getPrimaryEmail(data),
-        name: getDisplayName(data),
-        image: data.image_url || "",
-      };
+    if (eventType === 'user.created') {
+      const { id, email_addresses, first_name, last_name, image_url } = evt.data;
 
-      const user = await User.findOneAndUpdate(
-        { clerkId: data.id },
-        userData,
-        {
-          new: true,
-          setDefaultsOnInsert: true,
-          upsert: true,
-        }
-      );
-
-      return res.status(200).json({ success: true, user });
-    }
-
-    if (evt.type === "user.deleted") {
-      await ensureDatabaseConnection();
-
-      const data = evt.data as { id?: string };
-
-      if (data.id) {
-        await User.findOneAndDelete({ clerkId: data.id });
+      // Vérifie si l'utilisateur existe déjà
+      const exists = await User.findOne({ clerkId: id });
+      if (exists) {
+        console.log('⚠️ User already exists:', id);
+        return res.status(200).json({ success: true });
       }
 
-      return res.status(200).json({ success: true });
+      const newUser = await User.create({
+        clerkId: id,
+        email: email_addresses?.[0]?.email_address || '',
+        firstName: first_name || '',
+        lastName: last_name || '',
+        photo: image_url || '',
+      });
+
+      console.log('✅ User created in MongoDB:', newUser);
     }
 
-    return res.status(200).json({ success: true, ignored: evt.type });
-
-  } catch (err) {
-    console.error("Error verifying webhook:", err);
-    return res.status(400).send("Error verifying webhook");
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('❌ Webhook error:', error);
+    return res.status(500).json({ error: 'Webhook processing failed' });
   }
-}
+};

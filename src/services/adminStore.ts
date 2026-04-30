@@ -103,7 +103,8 @@ export async function updateOrderStatus(orderId: string, status: StoredOrder["or
     return null;
   }
 
-  const updatedOrder: StoredOrder = { ...store.orders[orderIndex], orderStatus: status };
+  const existing = store.orders[orderIndex] as StoredOrder; // fix: explicit cast resolves TS inference issue
+  const updatedOrder: StoredOrder = { ...existing, orderStatus: status };
   store.orders[orderIndex] = updatedOrder;
   await writeStore(store);
   return updatedOrder;

@@ -1,10 +1,19 @@
+// src/routes/index.ts
 import { getAuth } from "@clerk/express";
 import { Router } from "express";
-import { addOrder, getNotifications, getOrders, getOrdersForEmail, markNotificationRead, updateOrderStatus } from "../services/adminStore";
+import { 
+  addOrder, 
+  getNotifications, 
+  getOrders, 
+  getOrdersForEmail, 
+  markNotificationRead, 
+  updateOrderStatus 
+} from "../services/adminStore";
 import { notifyAdminOrder } from "../services/adminNotifications";
 
 const router = Router();
 
+// ==================== ROUTES DE BASE ====================
 router.get("/", (_req, res) => {
   res.send("Server is live!");
 });
@@ -16,6 +25,7 @@ router.get("/health", (_req, res) => {
   });
 });
 
+// ==================== ROUTES PROTÉGÉES ====================
 router.get("/protected", (req, res) => {
   const { isAuthenticated, userId, sessionId } = getAuth(req);
 
@@ -32,29 +42,7 @@ router.get("/protected", (req, res) => {
   });
 });
 
-router.post("/admin/notify-order", async (req, res) => {
-  const { event, order } = req.body ?? {};
-
-  if (!event || !order) {
-    return res.status(400).json({
-      error: "event and order are required",
-    });
-  }
-
-  try {
-    const result = await notifyAdminOrder({ event, order });
-
-    return res.status(200).json({
-      ok: true,
-      ...result,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      error: "Failed to notify admin",
-    });
-  }
-});
-
+// ==================== ORDERS ====================
 router.post("/orders", async (req, res) => {
   const order = req.body;
 
@@ -99,6 +87,30 @@ router.get("/orders", async (req, res) => {
   } catch {
     return res.status(500).json({
       error: "Failed to fetch orders",
+    });
+  }
+});
+
+// ==================== ADMIN ====================
+router.post("/admin/notify-order", async (req, res) => {
+  const { event, order } = req.body ?? {};
+
+  if (!event || !order) {
+    return res.status(400).json({
+      error: "event and order are required",
+    });
+  }
+
+  try {
+    const result = await notifyAdminOrder({ event, order });
+
+    return res.status(200).json({
+      ok: true,
+      ...result,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Failed to notify admin",
     });
   }
 });

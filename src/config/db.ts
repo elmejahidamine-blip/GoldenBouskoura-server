@@ -1,20 +1,32 @@
-import dns from "node:dns";
-import mongoose from "mongoose";
+// src/config/db.ts
+import mongoose from 'mongoose';
 
-async function connectToDatabase(): Promise<void> {
-  const mongoUri = process.env.MONGODB_URI;
+let isConnected = false;
 
-  if (!mongoUri) {
-    throw new Error("MONGODB_URI is not set");
+export const connectDB = async () => {
+  if (isConnected) {
+    console.log('MongoDB already connected');
+    return;
   }
 
-  // Work around local DNS resolvers that fail Atlas SRV lookups in Node.
-  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+  const uri = process.env.MONGODB_URI;
+  
+  if (!uri) {
+    throw new Error('MONGODB_URI is not defined in .env');
+  }
 
-  await mongoose.connect(mongoUri, {
-    serverSelectionTimeoutMS: 5000,
-    connectTimeoutMS: 5000,
-  });
-}
-
-export default connectToDatabase;
+  try {
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 10000,
+      connectTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+      maxPoolSize: 10,
+    });
+    
+    isConnected = true;
+    console.log('✅ MongoDB connected successfully');
+  } catch (error) {
+    console.error('❌ MongoDB connection failed:', error);
+    throw error;
+  }
+};

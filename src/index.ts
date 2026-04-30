@@ -1,8 +1,29 @@
+// src/index.ts
+import dns from 'dns';
+dns.setDefaultResultOrder('ipv4first');  // ← DOIT ÊTRE TOUT EN HAUT, AVANT TOUT
+
 import "dotenv/config";
 import app from "./app";
-import connectToDatabase from "./config/db";
+import { connectDB } from "./config/db";
 
 const port = Number(process.env.PORT) || 3000;
+
+async function startServer(): Promise<void> {
+  try {
+    await connectDB();
+    console.log("✅ MongoDB connected");
+  } catch (error) {
+    console.error("❌ MongoDB connection failed:", error);
+    // Ne quitte pas — laisse Vercel gérer
+  }
+
+  app.listen(port, () => {
+    console.log(`🚀 Server running at http://localhost:${port}`);
+  });
+}
+
+void startServer();
+
 const allowStartupWithoutMongo =
   process.env.ALLOW_START_WITHOUT_MONGODB === "true" ||
   process.env.ALLOW_START_WITHOUT_MONGODB === "1";
@@ -36,23 +57,10 @@ function logMongoConnectionError(error: unknown, level: "error" | "warn" = "erro
   }
 }
 
-async function startServer(): Promise<void> {
-  try {
-    await connectToDatabase();
-    console.log("MongoDB connected");
-  } catch (error) {
-    if (!allowStartupWithoutMongo) {
-      logMongoConnectionError(error);
-      process.exit(1);
-    }
-
-    logMongoConnectionError(error, "warn");
-    console.warn("Continuing without MongoDB because ALLOW_START_WITHOUT_MONGODB is enabled.");
-  }
 
   app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
   });
-}
+
 
 void startServer();
